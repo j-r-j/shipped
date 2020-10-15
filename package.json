@@ -1,0 +1,67 @@
+{
+  "name": "shipped",
+  "description": "A Command Line Interface (CLI) for the ShipEngine API",
+  "version": "0.1.0",
+  "author": "j-r-j @j-r-j",
+  "bin": {
+    "shipped": "./bin/run"
+  },
+  "bugs": "https://github.com/j-r-j/shipped/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^3",
+    "axios": "^0.20.0",
+    "chalk": "^4.1.0",
+    "cli-ux": "^5.5.0",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "eslint": "^7.11.0",
+    "eslint-config-oclif": "^3.1",
+    "eslint-config-oclif-typescript": "^0.1",
+    "globby": "^10",
+    "mocha": "^5",
+    "nock": "^13.0.4",
+    "nyc": "^14",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=10.1.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/j-r-j/shipped",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "shipped",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "j-r-j/shipped",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
