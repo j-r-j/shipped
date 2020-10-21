@@ -1,5 +1,5 @@
-import * as NetworkingClient from '../../utils/networking-client'
 import {Carrier, CarrierListApiResponse} from '../carrier'
+import * as NetworkingClient from '../../utils/networking-client'
 
 export default class CarriersApi {
     private client: NetworkingClient.ShippedNetworkingClient;

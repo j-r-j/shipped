@@ -40,14 +40,14 @@ describe('carriers', () => {
     .stderr()
     .command(['carriers', 'ls'])
     .it('runs carriers ls', ctx => {
-      expect(ctx.stderr).to.contain('\nError: You must be logged in to request your Carriers. See \'shipped login\'.\n\nSee \'shipped --help\' for more options.\n')
+      expect(ctx.stderr).to.contain('\nError: You must be logged in to make this request. See \'shipped login\'.\n\nSee \'shipped --help\' for more options.\n')
     })
 
     test
     .stderr()
     .command(['carriers', 'find', 'se-000000'])
     .it('runs carriers find <command>', ctx => {
-      expect(ctx.stderr).to.contain('\nError: You must be logged in to request your Carriers. See \'shipped login\'.\n\nSee \'shipped --help\' for more options.\n')
+      expect(ctx.stderr).to.contain('\nError: You must be logged in to make this request. See \'shipped login\'.\n\nSee \'shipped --help\' for more options.\n')
     })
   })
 
@@ -72,6 +72,10 @@ describe('carriers', () => {
   })
 
   describe('Bad Request', async () => {
+    beforeEach(async function () {
+      await Storage.setApiKey('FAKE_API_KEY')
+    })
+
     test
     .nock('https://api.shipengine.com', api => api
     .get('/v1/carriers')
@@ -94,6 +98,10 @@ describe('carriers', () => {
   })
 
   describe('Invalid Token Request', async () => {
+    beforeEach(async function () {
+      await Storage.setApiKey('FAKE_API_KEY')
+    })
+
     test
     .nock('https://api.shipengine.com', api => api
     .get('/v1/carriers')
@@ -116,6 +124,10 @@ describe('carriers', () => {
   })
 
   describe('Forbidden', async () => {
+    beforeEach(async function () {
+      await Storage.setApiKey('FAKE_API_KEY')
+    })
+
     test
     .nock('https://api.shipengine.com', api => api
     .get('/v1/carriers')
@@ -138,6 +150,10 @@ describe('carriers', () => {
   })
 
   describe('Not Found', async () => {
+    beforeEach(async function () {
+      await Storage.setApiKey('FAKE_API_KEY')
+    })
+
     test
     .nock('https://api.shipengine.com', api => api
     .get('/v1/carriers')

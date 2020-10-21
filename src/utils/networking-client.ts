@@ -36,30 +36,31 @@ export default class NetworkingClient implements ShippedNetworkingClient {
       return response.data as T
     } catch (error) {
       const err = error as AxiosError
-      throw new Error(this.processError(err))
+      throw this.processError(err)
     }
   }
 
-  private processError(err: AxiosError): string {
+  private processError(err: AxiosError): AxiosError {
+    const error = err
     switch (err.response?.status) {
     case 400:
-      return 'Bad Request'
+      error.message = 'Bad Request'
+      return error
     case 401:
-      return 'Unauthorized'
+      error.message = 'Unauthorized'
+      return error
     case 403:
-      return 'Forbidden'
+      error.message = 'Forbidden'
+      return error
     case 404:
-      return 'Not Found'
-    case 500 - 599:
-      return 'Something Went Wrong'
+      error.message = 'Not Found'
+      return error
     case undefined:
-      return 'Please check your Internet connection and try again'
+      error.message = 'Please check your Internet connection and try again'
+      return error
     default:
-      if (err.response?.statusText !== undefined) {
-        return err.response?.statusText
-      }
-
-      return 'Something Went Wrong'
+      error.message = 'Something Went Wrong'
+      return error
     }
   }
 }
