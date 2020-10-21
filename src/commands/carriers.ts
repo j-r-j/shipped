@@ -1,9 +1,9 @@
 import {Command, flags} from '@oclif/command'
 import * as chalk from 'chalk'
+import * as Storage from '../utils/storage'
 import cli from 'cli-ux'
 import CarriersApi from '../resources/carrier/carriers-api'
 import NetworkingClient from '../utils/networking-client'
-import * as Storage from '../utils/storage'
 
 export default class Carriers extends Command {
   static description = 'List and get Carrier accounts';

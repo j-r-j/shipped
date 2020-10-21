@@ -10,6 +10,17 @@ export default class Logout extends Command {
   };
 
   async run() {
+    /**
+     * Originally I considered throwing an error alerting the user
+     * that they were already logged out.
+     *
+     * However, I think I like the experience of being able to type
+     * logout and to not have to think about "I don't remember
+     * logging out".
+     *
+     * Purely preference and I could be convinced either way here.
+     */
+
     try {
       await Storage.clearApiKey()
       console.log(chalk.yellow('\nYou are no longer logged-in to ShipEngine.'))

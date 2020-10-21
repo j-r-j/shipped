@@ -1,7 +1,9 @@
 import {Command, flags} from '@oclif/command'
-import cli from 'cli-ux'
 import * as chalk from 'chalk'
 import * as Storage from '../utils/storage'
+import cli from 'cli-ux'
+import CarriersApi from '../resources/carrier/carriers-api'
+import NetworkingClient from '../utils/networking-client'
 
 export default class Login extends Command {
   static description = 'Login using you API credential';
@@ -15,30 +17,52 @@ export default class Login extends Command {
       type: 'hide',
     })) as string
 
+    try {
+      await Storage.setApiKey(apiKey)
+    } catch (error) {
+      console.error(chalk.red('\nSorry, something went wrong. Please try again'))
+      return
+    }
+
     /**
-     * Would like to hit a /ping endpoint or an auth enpoint
+     * Would like to hit an auth endpoint or an auth enpoint
      * to verify that the user is using a valid api key.
      *
-     * For now I am setting the api key and "it just works".
+     * Originally I was setting an api key and "it just works".
      * This will leave the user vulnerable to human error.
      *
-     * In the event we develop a /ping endpoint I could have this
+     * In the event we develop an auth endpoint I could have this
      * Command layer call ping using the api key and start a console
      * action for "Logging-In"
      *
      * In the event of a 200 I will sign the user in.
      * In the event of any other error I will tell the user
-     * 403 - The key you input was invalid. Please try again.
-     * Any other error - Something Went Wrong. Please try again.
+     * 401 - The key you input was invalid.
      *
-     * cli.action.start('Logging-In')
+     * Because there is not an auth endpoint I am going to auth with Carriers
      */
 
+    //
+    const networking = new NetworkingClient(apiKey)
+    const carriersApi = new CarriersApi(networking)
+
+    cli.action.start('Logging you into shipped')
     try {
-      await Storage.setApiKey(apiKey)
+      await carriersApi.listAll()
+      cli.action.stop()
       console.log(chalk.yellow('\nYou have successfully logged in.'))
     } catch (error) {
-      console.error(chalk.red('\nSorry, something went wrong. Please try again'))
+      cli.action.stop()
+      await Storage.clearApiKey()
+      switch (error.response?.status) {
+      case 401:
+        console.error(chalk.red('\nThe API credentials provided were incorrect.\n\nPlease go to', chalk.underline.white('https://app.shipengine.com/'), 'and verify your credentials.'))
+        break
+
+      default:
+        console.error(chalk.red(`\n${error}`))
+        break
+      }
     }
   }
 }

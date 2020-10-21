@@ -37,6 +37,6 @@ export async function getApiKey(): Promise<string> {
     const key = await fs.readFile(API_KEY_FILE, 'utf8')
     return key
   } catch (error) {
-    throw new Error("You must be logged in to request your Carriers. See 'shipped login'.\n\nSee 'shipped --help' for more options.")
+    throw new Error("You must be logged in to make this request. See 'shipped login'.\n\nSee 'shipped --help' for more options.")
   }
 }
